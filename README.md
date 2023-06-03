@@ -7,3 +7,6 @@
 ## 目录文件介绍
 * main.py 研发中
 * seuVisitor.js 已经写好的油猴脚本
+
+## 预约url
+[访客申请](https://infoplus.seu.edu.cn/infoplus/form/XWJXSQ/start?sig=bd12f0a41c7a9b8a2a2d0cbd48b138dc&ts=1767024000&uid=0f1fb840-aa02-11ea-b752-005056bd7aba&lxfs=18351939811)

@@ -1,21 +1,61 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import mysql.connector
 import time
+import config            # 需要config.py 存储数据库连接信息
 
-# 个人信息区
-name = ''
-phone = ''
-id_number = '' # 身份证号
-car_number = ''
-phone_teacher = '' # 导员电话
-id_department = ''
-department = ''
-id_teacher = ''
-name_teacher = ''
-dormitory = ''
-card = '' # 一卡通
 
-def apply_car():
+class UserInfo:
+    def __init__(self, id, name, phone, id_number, car_number, phone_teacher, id_department, department, id_teacher,
+                 name_teacher, dormitory, card):
+        self.id = id
+        self.name = name
+        self.phone = phone
+        self.id_number = id_number
+        self.car_number = car_number
+        self.phone_teacher = phone_teacher
+        self.id_department = id_department
+        self.department = department
+        self.id_teacher = id_teacher
+        self.name_teacher = name_teacher
+        self.dormitory = dormitory
+        self.card = card
+
+# 建立数据库连接
+cnx = mysql.connector.connect(
+    host=config.host,
+    user=config.user,
+    password=config.password,
+    database=config.database
+)
+
+# 创建游标对象
+cursor = cnx.cursor()
+
+# 执行SQL查询语句
+query = "SELECT * FROM user_info"
+cursor.execute(query)
+
+# 获取查询结果
+results = cursor.fetchall()
+
+# 存储数据的列表
+user_info_list = []
+
+# 将查询结果转化为UserInfo对象并存储
+for row in results:
+    user_info = UserInfo(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11])
+    user_info_list.append(user_info)
+
+# 关闭游标和数据库连接
+cursor.close()
+cnx.close()
+
+# 打印存储的UserInfo对象
+for user_info in user_info_list:
+    print(user_info.name_teacher)
+
+def apply_car(user):
     # # Turn Chrome into headless
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
@@ -38,11 +78,11 @@ def apply_car():
     phone_number.clear()
 
     time.sleep(5)
-    phone_number.send_keys(phone)
+    phone_number.send_keys(user.phone)
 
     name_student = browser.find_element(By.XPATH, '//*[@id="V1_CTRL177"]')
     name_student.clear()
-    browser.execute_script("arguments[0].value = '{}';".format(name), name_student)
+    browser.execute_script("arguments[0].value = '{}';".format(user.name), name_student)
 
     name_university = browser.find_element(By.XPATH, '//*[@id="V1_CTRL178"]')
     name_university.clear()
@@ -50,7 +90,7 @@ def apply_car():
 
     id_student = browser.find_element(By.XPATH, '//*[@id="V1_CTRL180"]')
     id_student.clear()
-    browser.execute_script("arguments[0].value = '{}';".format(id_number), id_student)
+    browser.execute_script("arguments[0].value = '{}';".format(user.id_number), id_student)
 
     #将界面拉到最下面，这个很关键的
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -67,10 +107,10 @@ def apply_car():
     browser.execute_script("arguments[0].click();", drive_or_not)
 
     license_car = browser.find_element(By.XPATH, '//*[@id="V1_CTRL217"]')
-    browser.execute_script("arguments[0].value = '{}';".format(car_number), license_car)
+    browser.execute_script("arguments[0].value = '{}';".format(user.car_number), license_car)
 
     phone_number_teacher = browser.find_element(By.XPATH, '//*[@id="V1_CTRL379"]')
-    browser.execute_script("arguments[0].value = '{}';".format(phone_teacher), phone_number_teacher)
+    browser.execute_script("arguments[0].value = '{}';".format(user.phone_teacher), phone_number_teacher)
     department_stu = browser.find_element(By.XPATH, '//*[@id="V1_CTRL377"]')
 
     browser.execute_script('''
@@ -80,7 +120,7 @@ def apply_car():
     console.log(daoyuanOption)
     arguments[0].appendChild(daoyuanOption)
     arguments[0].value = "{}"
-    '''.format(id_department, department, id_department), department_stu)
+    '''.format(user.id_department, user.department, user.id_department), department_stu)
 
     teacher_name = browser.find_element(By.XPATH, '//*[@id="V1_CTRL378"]')
     browser.execute_script('''
@@ -90,13 +130,13 @@ def apply_car():
     console.log(daoyuanOption)
     arguments[0].appendChild(daoyuanOption)
     arguments[0].value = "{}"
-    '''.format(id_teacher, teacher_name, id_teacher), teacher_name)
+    '''.format(user.id_teacher, user.name_teacher, user.id_teacher), teacher_name)
 
     dorm_location = browser.find_element(By.XPATH, '//textarea[@id="V1_CTRL376"]')
-    browser.execute_script("arguments[0].value = '{}';".format(dormitory), dorm_location)
+    browser.execute_script("arguments[0].value = '{}';".format(user.dormitory), dorm_location)
 
     reason_for_enter = browser.find_element(By.XPATH, '//textarea[@id="V1_CTRL380"]')
-    browser.execute_script("arguments[0].value ='开车入校，{}，{}';".format(name, card), reason_for_enter)
+    browser.execute_script("arguments[0].value ='开车入校，{}，{}';".format(user.name, user.card), reason_for_enter)
 
 
     apply_button = browser.find_element(By.XPATH, '//div[@class="commandC"]//a[@class="command_button_content"]//nobr')
@@ -108,14 +148,6 @@ def program_running_test():
     print( 'This program is running successfully... ')
 
 
-# # for i in range(60*60*24):
-while True:
-    try:
-        apply_car()
-    except Exception as e:
-        pass
-
-    for i in range(60*6*24):
-        print(i)
-        time.sleep(10)
-        program_running_test()
+if __name__ == '__main__':
+    for user in user_info_list:
+        apply_car(user)

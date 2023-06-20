@@ -141,9 +141,6 @@ def apply_car(user):
     print('The appointment is done.')
     time.sleep(5)
 
-def program_running_test():
-    print( 'This program is running successfully... ')
-
 
 if __name__ == '__main__':
     try:
@@ -152,4 +149,4 @@ if __name__ == '__main__':
     except Exception as e:
         print("Error:\n", str(e))
     else:
-        print("This program is running successfully...")
+        print("Successfully!")

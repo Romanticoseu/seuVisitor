@@ -7,13 +7,13 @@ name = ''
 phone = ''
 id_number = '' # 身份证号
 car_number = ''
-phone_teacher = ''
+phone_teacher = '' # 导员电话
 id_department = ''
 department = ''
 id_teacher = ''
 name_teacher = ''
 dormitory = ''
-card = ''
+card = '' # 一卡通
 
 def apply_car():
     # # Turn Chrome into headless

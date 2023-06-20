@@ -51,17 +51,14 @@ for row in results:
 cursor.close()
 cnx.close()
 
-# 打印存储的UserInfo对象
-for user_info in user_info_list:
-    print(user_info.name_teacher)
-
 def apply_car(user):
     # # Turn Chrome into headless
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
     browser = webdriver.Chrome(options=chrome_options)
-    # browser = webdriver.Chrome()
     url = 'https://infoplus.seu.edu.cn/infoplus/form/XWJXSQ/start?sig=bd12f0a41c7a9b8a2a2d0cbd48b138dc&ts=1767024000&uid=0f1fb840-aa02-11ea-b752-005056bd7aba&lxfs=18351939811'
     browser.get(url)
     browser.implicitly_wait(15)  # 可以用这个加快速度，少等待
@@ -149,5 +146,10 @@ def program_running_test():
 
 
 if __name__ == '__main__':
-    for user in user_info_list:
-        apply_car(user)
+    try:
+        for user in user_info_list:
+            apply_car(user)
+    except Exception as e:
+        print("Error:\n", str(e))
+    else:
+        print("This program is running successfully...")

@@ -6,6 +6,7 @@
 
 
 ## 目录文件介绍
-* auto_linux.py  主体文件，目前实现无头预约功能，下一步实现数据库连接 (环境：python3.7)
+* auto_linux.py  主体文件，目前实现无头预约功能(环境：python3.7)
+* run_script.sh linux定时执行脚本文件
 * seuVisitor.js 已经写好的油猴脚本(由于电脑版url问题暂未发布发布)
 

@@ -3,4 +3,4 @@ myInfo.py
 config.py
 __pycache__/
 *.pyc
-*.txt
+log.txt
